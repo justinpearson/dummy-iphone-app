@@ -34,6 +34,7 @@ struct ContentView: View {
                                 .foregroundStyle(todo.isCompleted ? .green : .gray)
                                 .onTapGesture {
                                     todo.isCompleted.toggle()
+                                    print("Toggled '\(todo.title)' to \(todo.isCompleted ? "completed" : "incomplete")")
                                 }
                             Text(todo.title)
                                 .strikethrough(todo.isCompleted)
@@ -45,6 +46,9 @@ struct ContentView: View {
                 .listStyle(.plain)
             }
             .navigationTitle("Todos")
+            .onAppear {
+                print("Todo count: \(todos.count)")
+            }
         }
     }
 
@@ -53,12 +57,16 @@ struct ContentView: View {
         guard !trimmedTitle.isEmpty else { return }
         let todo = TodoItem(title: trimmedTitle)
         modelContext.insert(todo)
+        print("Added todo: \(trimmedTitle)")
         newTodoTitle = ""
     }
 
     private func deleteTodos(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(todos[index])
+            let todo = todos[index]
+            print("Deleting todo:")
+            debugPrint(todo)
+            modelContext.delete(todo)
         }
     }
 }
