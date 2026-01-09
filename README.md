@@ -1,231 +1,326 @@
 # DummyTodoApp
 
-A simple iOS todo app built with SwiftUI and SwiftData. This is a learning project for iOS development.
+A simple iOS todo app built with SwiftUI and SwiftData for learning iOS development.
 
 ![App running on iPhone](screenshots/06-app-running.png)
 
 ## Features
 
-- Add todos with a text field
-- Mark todos as complete/incomplete (tap the circle)
+- Add todos (text field + button)
+- Mark complete/incomplete (tap the circle)
 - Delete todos (swipe left)
-- Persistent storage using SwiftData
+- Data persists across app launches (SwiftData)
 
 ---
 
-## Running the App on Your iPhone
+## Quick Start
 
-### Prerequisites (One-Time Setup)
+(Assuming you have git + xcode)
 
-#### 1. Install Xcode (Mac)
+```bash
+# get source code
+git clone https://github.com/justinpearson/dummy-iphone-app.git
 
-Download Xcode from the Mac App Store. This is a large download (~12GB) and requires macOS.
+cd dummy-iphone-app
 
-#### 2. Clone the Project (Terminal)
+# test: build app from cmd line
+xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj -scheme DummyTodoApp -destination 'platform=iOS Simulator,name=iPhone 17' build
 
+# open proj in xcode to run in simulator + iphone
+open DummyTodoApp/DummyTodoApp.xcodeproj
+```
+
+Run on iOS simulator in xcode:
+
+1. In Xcode's top toolbar, click the device dropdown (may say "Any iOS Device")
+2. Select a simulator, e.g., **iPhone 17**
+3. Press the **Play button (▶)** in the upper-left corner, or press **Cmd+R**
+
+TODO: screenshot w/ arrows
+
+Run on iPhone:
+
+1. Plug in iphone
+1. In Xcode, ensure your iPhone is selected in the device dropdown
+2. Press the **Play button (▶)** in the upper-left, or **Cmd+R**
+
+
+Useful commands:
+
+```bash
+# List connected devices (simulators + physical)
+xcrun xctrace list devices
+
+# Build for simulator (reliable)
+xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj \
+  -scheme DummyTodoApp \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  build
+```
+
+Note: Building for physical iPhone via command line is possible but finicky (device connection issues, Developer Mode authorization). Use Xcode's Run button for physical devices.
+
+
+---
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Run in iOS Simulator](#run-in-ios-simulator)
+3. [Run on iPhone](#run-on-iphone)
+4. [Limitations](#limitations)
+5. [Uninstall & Cleanup](#uninstall--cleanup)
+6. [Development](#development)
+
+---
+
+## Prerequisites
+
+| Requirement | Needed for | How to check |
+|-------------|-----------|--------------|
+| **Xcode** | Simulator + iPhone | Run `xcode-select -p` in Terminal. If it prints a path, Xcode is installed. |
+| **git** | Cloning the repo | Run `git --version` in Terminal. |
+| **Apple Account** | iPhone only | Go to [appleid.apple.com](https://appleid.apple.com). If you can sign in, you have an account. Free account works. |
+| **iPhone** | iPhone only | iPhone 12 or newer running iOS 26+, with USB cable. |
+
+### Installing Xcode
+
+**Do I need to do this?** Run `xcode-select -p` in Terminal. If you get an error or no output, you need Xcode.
+
+**How to do it:** Download [Xcode from the Mac App Store](macappstore://itunes.apple.com/app/id497799835) (~12GB download). After installing, open Xcode once to complete setup — it will prompt you to install additional components including the iOS Simulator.
+
+**Success check:** Run `xcrun simctl list devices` — you should see a list of simulators (e.g., "iPhone 17").
+
+---
+
+## Run in iOS Simulator
+
+Complete these steps first before attempting to run on a physical iPhone.
+
+### Step 1: Clone the Repository
+
+**Do I need to do this?** Check if you already have the folder: `ls dummy-iphone-app`. If it exists, skip to Step 2.
+
+**How to do it (Terminal):**
 ```bash
 git clone https://github.com/justinpearson/dummy-iphone-app.git
 cd dummy-iphone-app
 ```
 
-#### 3. Open the Project (Mac)
+> **Error: `git: command not found`** — Install Xcode Command Line Tools: `xcode-select --install`
 
-Double-click `DummyTodoApp/DummyTodoApp.xcodeproj` to open it in Xcode.
+**Success check:** The folder `dummy-iphone-app` exists and contains `DummyTodoApp/`.
 
 ---
 
-### Configure Signing (One-Time Setup in Xcode)
+### Step 2: Build from Command Line (Optional)
 
-Before you can deploy to a physical iPhone, you need to configure code signing with your Apple ID.
+**Do I need to do this?** Optional sanity check. Verifies the project builds before opening Xcode.
 
-#### 1. Select the Project
+**How to do it (Terminal):**
+```bash
+xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj \
+  -scheme DummyTodoApp \
+  -destination 'platform=iOS Simulator,name=iPhone 17' \
+  build
+```
 
-In Xcode's left sidebar (Navigator), click on **DummyTodoApp** (the blue icon at the very top of the file list).
+**Expected:** Output ends with `** BUILD SUCCEEDED **`
 
-#### 2. Select the Target
+> **Error: `xcodebuild: command not found`** — Xcode isn't installed. See [Prerequisites](#prerequisites).
 
-In the middle panel, under **TARGETS**, click **DummyTodoApp**.
+> **Error: `Unable to find a destination matching the provided destination specifier`** — The iOS Simulator isn't installed. Open Xcode, go to **Settings → Components** (or **Platforms**), and download an iOS Simulator. Then run `xcrun simctl list devices` to find the simulator name and update the command above.
 
-#### 3. Open Signing & Capabilities
 
-Click the **Signing & Capabilities** tab (in the row of tabs: General, Signing & Capabilities, Resource Tags, etc.).
 
-#### 4. Add Your Apple Account
+---
 
-Click the **Team** dropdown. If you don't see your account:
-1. Click **Add Account...**
-2. In the dialog that opens, click **Add Apple Account...**
-3. Sign in with your Apple ID (a free account works)
+### Step 3: Open Project in Xcode
+
+**Do I need to do this?** If Xcode is already open with DummyTodoApp, skip to Step 4.
+
+**How to do it:** Double-click `DummyTodoApp/DummyTodoApp.xcodeproj` in Finder, or run:
+```bash
+open DummyTodoApp/DummyTodoApp.xcodeproj
+```
+
+> **Error: "The file couldn't be opened"** — You need Xcode. See [Prerequisites](#prerequisites).
+
+**Success check:** Xcode opens and shows the project in the left sidebar.
+
+---
+
+### Step 4: Run in Simulator
+
+**Do I need to do this?** If the app is already running in a simulator, you're done with this section.
+
+**How to do it:**
+1. In Xcode's top toolbar, click the device dropdown (may say "Any iOS Device")
+2. Select a simulator, e.g., **iPhone 17**
+3. Press the **Play button (▶)** in the upper-left corner, or press **Cmd+R**
+
+> **Error: "No such module 'SwiftData'"** — Your Xcode may be too old. Update Xcode from the App Store.
+
+**Success check:** A simulator window opens and displays the "Todos" app.
+
+---
+
+## Run on iPhone
+
+**Prerequisite:** Complete [Run in iOS Simulator](#run-in-ios-simulator) first. This confirms Xcode and the project are set up correctly.
+
+### Step 1: Configure Code Signing
+
+**Do I need to do this?** In Xcode, go to the Signing & Capabilities tab (see below). If **Team** shows your name and there are no red errors, skip to Step 2.
+
+**How to do it:**
+1. In Xcode's left sidebar, click **DummyTodoApp** (blue project icon at the top)
+2. In the middle panel under **TARGETS**, click **DummyTodoApp**
+3. Click the **Signing & Capabilities** tab
+4. Click the **Team** dropdown:
+   - If your account appears, select it (shows as "Your Name (Personal Team)")
+   - If not, click **Add Account...** → **Add Apple Account...** → sign in with your Apple ID
 
 ![Add Apple Account](screenshots/01-signing-add-account.png)
-
-#### 5. Select Your Team
-
-After signing in, select your team from the **Team** dropdown (it will show as "Your Name (Personal Team)").
-
 ![Team Selected](screenshots/02-signing-team-selected.png)
+
+**Success check:** The Team dropdown shows your name, and no red error banners appear.
 
 ---
 
-### Enable Developer Mode (One-Time Setup on iPhone)
+### Step 2: Connect iPhone and Select It
 
-Your iPhone must have Developer Mode enabled to run apps from Xcode.
+**Do I need to do this?** Look at Xcode's device dropdown in the top toolbar. If your iPhone's name appears and is selected, skip to Step 3.
 
-#### 1. Connect Your iPhone
+**How to do it:**
+1. Connect your iPhone to your Mac via USB cable
+2. If prompted on your iPhone, tap **Trust** and enter your passcode
+3. In Xcode's top toolbar, click the device dropdown and select your iPhone
 
-Connect your iPhone to your Mac via USB cable. If prompted on your iPhone, tap **Trust** and enter your passcode.
+> **First-time connection:** Xcode may show "Copying shared cache symbols from [iPhone]" for 5-15 minutes. Wait for it to complete.
 
-#### 2. Select Your iPhone in Xcode
+![Copying Symbols](screenshots/04-copying-symbols.png)
 
-In Xcode's top toolbar, click the device dropdown (shows "Any iOS Device" or a simulator name) and select your iPhone.
+**Success check:** Your iPhone appears in the device dropdown and is selected.
 
-#### 3. Attempt to Build
+---
 
-Press the **Play button** (▶) in the **upper-left corner** of Xcode, or press **Cmd+R**.
+### Step 3: Enable Developer Mode on iPhone
 
-If Developer Mode is disabled, you'll see an error:
+**Do I need to do this?** On your **iPhone**, go to **Settings → Privacy & Security → Developer Mode**. If the toggle is ON, skip to Step 4.
 
-![Developer Mode Disabled](screenshots/03-developer-mode-disabled.png)
-
-#### 4. Enable Developer Mode (iPhone)
-
-On your **iPhone**:
-
+**How to do it (iPhone):**
 1. Open **Settings**
 2. Go to **Privacy & Security**
 3. Scroll down and tap **Developer Mode**
 4. Toggle it **ON**
-5. Your iPhone will prompt you to restart — tap **Restart**
-6. After restart, confirm enabling Developer Mode when prompted
+5. Tap **Restart** when prompted
+6. After restart, confirm enabling Developer Mode
 
-> **Note:** The Developer Mode option only appears after you've connected your iPhone to Xcode at least once. If you don't see it, make sure your phone is connected and recognized by Xcode, then check again.
+> **Can't find Developer Mode?** It only appears after connecting your iPhone to Xcode at least once. Connect your phone, wait a moment, then check again.
 
----
+![Developer Mode Disabled Error](screenshots/03-developer-mode-disabled.png)
 
-### First-Time Device Setup (One-Time)
-
-The first time Xcode connects to your iPhone for development, it needs to copy debug symbols. This is automatic but takes time.
-
-#### Wait for Symbol Copying
-
-After enabling Developer Mode, Xcode will show "Copying shared cache symbols from [your iPhone]" in the status bar:
-
-![Copying Symbols](screenshots/04-copying-symbols.png)
-
-**This takes 5-15 minutes.** Just wait for it to complete. You only need to do this once per iOS version on your device.
+**Success check:** Settings → Privacy & Security → Developer Mode shows the toggle ON.
 
 ---
 
-### Trust the Developer Certificate (One-Time Setup on iPhone)
+### Step 4: Trust Developer Certificate on iPhone
 
-The first time you run an app from your free developer account, your iPhone won't trust it.
+**Do I need to do this?** On your **iPhone**, go to **Settings → General → VPN & Device Management**. If you see your Apple ID email under "Developer App" and it says "trusted", skip to Step 5.
 
-#### 1. Build and Run
+**How to do it:**
 
-In **Xcode**, press the **Play button** (▶) in the upper-left, or **Cmd+R**.
-
-If you see this error:
+First, attempt to run the app from Xcode (press **Play ▶** or **Cmd+R**). If you see this error:
 
 ![Certificate Not Trusted](screenshots/05-certificate-not-trusted.png)
 
-#### 2. Trust Your Certificate (iPhone)
-
-On your **iPhone**:
-
+Then on your **iPhone**:
 1. Open **Settings**
-2. Go to **General** → **VPN & Device Management**
+2. Go to **General → VPN & Device Management**
 3. Under "Developer App", tap your Apple ID email
 4. Tap **Trust "[your email]"**
-5. Tap **Trust** again to confirm
+5. Tap **Trust** to confirm
 
-#### 3. Run Again
-
-Go back to **Xcode** and press **Play** (▶) or **Cmd+R** again. The app should now launch on your iPhone.
+**Success check:** Settings → General → VPN & Device Management shows your developer certificate as trusted.
 
 ---
 
-### Running the App (Every Time)
+### Step 5: Run on iPhone
 
-Once the one-time setup is complete, running the app is simple:
+**Do I need to do this?** If the app is already running on your iPhone, you're done!
 
-1. Connect your iPhone to your Mac (USB or Wi-Fi)
-2. Open the project in Xcode
-3. Select your iPhone from the device dropdown in the top toolbar
-4. Press the **Play button** (▶) in the upper-left, or **Cmd+R**
+**How to do it:**
+1. In Xcode, ensure your iPhone is selected in the device dropdown
+2. Press the **Play button (▶)** in the upper-left, or **Cmd+R**
 
-The app will build, install, and launch on your iPhone.
+> **Error: "OS version lower than deployment target"** — Your iPhone's iOS version is older than the app requires. In Xcode: select the project → DummyTodoApp target → General tab → under "Minimum Deployments", lower the iOS version.
 
-#### Disconnecting
-
-To disconnect:
-
-1. In **Xcode**, press the **Stop button** (■) next to the Play button to end the debug session
-2. Unplug your iPhone (no need to eject)
-
-The app remains installed and works without Xcode.
+**Success check:** The app launches on your iPhone showing the "Todos" screen.
 
 ---
 
-### Important Limitations
+## Limitations
 
-#### Free Developer Account: 7-Day Expiration
+### 7-Day Certificate Expiration (Free Accounts)
 
-Apps installed with a free Apple developer account expire after **7 days**. When the app expires:
-- The app icon remains but won't launch
-- Reconnect your iPhone to Xcode and press Play to reinstall
-- Your data (todos) is preserved — only the app binary expires
+Apps installed with a free Apple developer account expire after **7 days**.
+
+- The app icon stays but won't launch
+- Your data (todos) is preserved
+- To fix: reconnect iPhone to Xcode and press Play to reinstall
 
 A paid Apple Developer account ($99/year) removes this limitation.
 
-#### iOS Version Compatibility
+### iOS Version Compatibility
 
-The app's deployment target is iOS 26.0. If your iPhone runs an older iOS version, you'll see "OS version lower than deployment target" in Xcode. To fix this:
-
-1. In Xcode, select **DummyTodoApp** in the Navigator (left sidebar)
-2. Select the **DummyTodoApp** target
-3. Go to the **General** tab
-4. Under **Minimum Deployments**, lower the iOS version to match your phone
+The app targets iOS 26.0. If your iPhone runs an older version, lower the deployment target in Xcode (see error handling in Step 5 above).
 
 ---
 
-## Uninstalling the App and Reverting iPhone Settings
+## Uninstall & Cleanup
 
-### Remove the App (iPhone)
+### Remove the App
 
-On your **iPhone**:
+**Do I need to do this?** Check if DummyTodoApp is on your iPhone's Home Screen. If not, skip this.
 
+**How to do it (iPhone):**
 1. Find the **DummyTodoApp** icon on your Home Screen
 2. Long-press the icon until the menu appears
 3. Tap **Remove App** → **Delete App** → **Delete**
 
-This also deletes all app data (your todos).
+**Success check:** The app no longer appears on your Home Screen. (Note: this also deletes your todos.)
 
-### Disable Developer Mode (iPhone)
+---
 
-If you no longer need to develop iOS apps, you can disable Developer Mode:
+### Disable Developer Mode
 
-On your **iPhone**:
+**Do I need to do this?** On your **iPhone**, check Settings → Privacy & Security → Developer Mode. If it's already OFF (or not visible), skip this.
 
+**How to do it (iPhone):**
 1. Open **Settings**
 2. Go to **Privacy & Security**
-3. Scroll down and tap **Developer Mode**
+3. Tap **Developer Mode**
 4. Toggle it **OFF**
 5. Your iPhone will restart
 
-> **Warning:** Disabling Developer Mode will remove all apps installed via Xcode (including this one).
+> **Warning:** Disabling Developer Mode removes ALL apps installed via Xcode.
 
-### Remove Developer Certificate Trust (iPhone)
+**Success check:** Settings → Privacy & Security no longer shows Developer Mode, or the toggle is OFF.
 
-To remove the trust setting for your developer certificate:
+---
 
-On your **iPhone**:
+### Remove Developer Certificate Trust
 
+**Do I need to do this?** On your **iPhone**, check Settings → General → VPN & Device Management. If there's no "Developer App" section, skip this.
+
+**How to do it (iPhone):**
 1. Open **Settings**
-2. Go to **General** → **VPN & Device Management**
+2. Go to **General → VPN & Device Management**
 3. Under "Developer App", tap your Apple ID email
-4. Tap **Delete App** to remove the certificate trust (this also deletes apps signed with that certificate)
+4. Tap **Delete App**
 
-If there are no developer apps installed, this section won't appear.
+**Success check:** Settings → General → VPN & Device Management no longer shows a Developer App section.
 
 ---
 
@@ -234,28 +329,26 @@ If there are no developer apps installed, this section won't appear.
 ### Build from Command Line
 
 ```bash
-# Build the app
-xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj -scheme DummyTodoApp -configuration Debug build
+# Build
+xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj \
+  -scheme DummyTodoApp -configuration Debug build
 
-# Run unit tests
-xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj -scheme DummyTodoApp \
+# Run tests
+xcodebuild -project DummyTodoApp/DummyTodoApp.xcodeproj \
+  -scheme DummyTodoApp \
   -destination 'platform=iOS Simulator,name=iPhone 17' test
 ```
 
 ### Debug Logging
 
-The app includes `print()` statements that output to Xcode's debug console (bottom panel). You'll see messages when you:
-- Add a todo
-- Toggle a todo's completion status
-- Delete a todo
+The app includes `print()` statements visible in Xcode's debug console (bottom panel) when you add, toggle, or delete todos.
 
 ### Project Structure
 
 ```
 DummyTodoApp/
-├── DummyTodoApp/           # Main app source
-│   ├── Assets.xcassets/    # App icons, colors, images
-│   ├── TodoItem.swift      # SwiftData model
+├── DummyTodoApp/           # App source
+│   ├── TodoItem.swift      # Data model (SwiftData)
 │   ├── ContentView.swift   # Main UI
 │   └── DummyTodoAppApp.swift
 ├── DummyTodoAppTests/      # Unit tests
